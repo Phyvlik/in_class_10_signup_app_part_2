@@ -1,34 +1,48 @@
-# Flutter Signup Form - MAD 4360 In-Class Activity 09
+# Flutter Signup App - MAD 4360 In-Class Activity 10
 
-A Flutter signup screen built for MAD 4360 (Mobile App Development). Demonstrates StatefulWidget, form validation, screen navigation, and animations.
+A multi-screen Flutter signup app built for MAD 4360 (Mobile App Development). This is Part 2 of 2, extending the validated signup form from Activity 09 into a complete app flow with a welcome screen, enhanced signup screen, and a success screen.
 
-## Features
+## Built On
 
-- **Signup Form**: Name, Email, and Password fields with an `OutlineInputBorder` and prefix icons
-- **Input Validation**: Inline validators that show red error messages on empty or invalid input
+Activity 09 established the foundation: a `StatefulWidget` signup form with input validation, avatar selection, confirm password logic, and basic navigation. Activity 10 refactors that work into a cleaner multi-screen structure and adds richer user experience details.
 
-## Bonus Challenges Completed
+## What Was Added in Activity 10
 
-- **Confirm Password**: Second password field that validates both values match
-- **Avatar Picker**: Emoji selector that lets users choose a profile avatar before signing up
-- **Screen Navigation**: Successful signup navigates to a `WelcomeScreen` via `Navigator.push` and `MaterialPageRoute`
-- **Celebratory Animation**: `WelcomeScreen` fades in and scales up with an elastic bounce using `AnimationController`
+- **WelcomeScreen**: Animated typewriter intro using `animated_text_kit`, leads into the signup flow
+- **Date Picker**: Birth date selection via `showDatePicker` on the signup screen
+- **Password Visibility Toggle**: Eye icon to show/hide password and confirm password fields
+- **Loading State**: 2-second spinner on the submit button before navigating to success
+- **SuccessScreen**: Displays the user's name and avatar, plays a confetti burst using the `confetti` package, uses `pushReplacement` so users cannot navigate back to the form
+- **Organized File Structure**: Each screen lives in its own file under `lib/screens/`, keeping `main.dart` minimal
 
-## Widget Tree
+## Packages Used
+
+- `animated_text_kit` - typewriter animation on the welcome screen
+- `confetti` - celebration effect on the success screen
+
+## App Flow
 
 ```
-MyApp (StatelessWidget)
-└── MaterialApp
-    └── SignupPage (StatefulWidget)
-        └── Scaffold
-            └── Form (keyed with GlobalKey<FormState>)
-                └── Column
-                    ├── Avatar Picker
-                    ├── TextFormField (Name)
-                    ├── TextFormField (Email)
-                    ├── TextFormField (Password)
-                    ├── TextFormField (Confirm Password)
-                    └── ElevatedButton -> WelcomeScreen
+WelcomeScreen
+    |
+    | Navigator.push
+    v
+SignupScreen (form with validation)
+    |
+    | Navigator.pushReplacement
+    v
+SuccessScreen (confetti + personalized message)
+```
+
+## Project Structure
+
+```
+lib/
+|- main.dart
+|- screens/
+    |- welcome_screen.dart
+    |- signup_screen.dart
+    |- success_screen.dart
 ```
 
 ## How to Run
@@ -40,15 +54,13 @@ flutter run
 
 ## Testing Checklist
 
-- Leave fields empty and tap Sign Up -> expect error messages
+- Tap Get Started on the welcome screen -> opens signup form
+- Leave fields empty and tap Sign Up -> expect inline error messages
 - Enter an email without `@` -> expect email error
 - Enter a password shorter than 6 characters -> expect password error
 - Enter mismatched passwords -> expect confirm password error
-- Fill all fields correctly -> navigates to WelcomeScreen with fade-in animation
-
-## Project Structure
-
-```
-lib/
-└── main.dart       # MyApp, SignupPage, WelcomeScreen
-```
+- Tap the eye icon -> password text toggles visible/hidden
+- Tap Date of Birth -> date picker opens and selection displays
+- Fill all fields correctly -> loading spinner shows, then navigates to success screen
+- Tap Celebrate Again on the success screen -> confetti replays
+- Press back on the success screen -> returns to welcome screen, not the form
